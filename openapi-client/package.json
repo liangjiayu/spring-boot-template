@@ -1,0 +1,21 @@
+{
+  "name": "openapi-client",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "generate": "NO_PROXY=localhost,127.0.0.1 openapi2ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.34.8",
+  "devDependencies": {
+    "@umijs/openapi": "1.14.1",
+    "tslib": "^2.9.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "umi-request": "^1.4.0"
+  }
+}
