@@ -198,7 +198,8 @@ class AppApplicationTests {
     var response = document("/v3/api-docs");
     assertEquals(200, response.statusCode(), response.body());
     var spec = mapper.readTree(response.body());
-    assertEquals("CRUD API", spec.at("/info/title").asText());
+    assertEquals("spring-boot-template", spec.at("/info/title").asText());
+    assertEquals("基于 Spring Boot 的项目模板。", spec.at("/info/description").asText());
     var paths = spec.get("paths");
     assertEquals(2, paths.size());
     assertTrue(paths.at("/" + "~1api~1users").has("get"));

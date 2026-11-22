@@ -38,7 +38,7 @@ OpenAPI JSON 地址：http://localhost:8080/v3/api-docs。
 建议先 POST 新增用户，复制响应中的 `id`，再用该 ID 查询详情、修改、删除。
 GET `/api/users` 可查看列表。测试时使用独立用户名，结束后删除自己新增的测试记录。
 
-各接口文档展示成功响应，错误响应在公共说明中统一定义。Swagger 默认开启，无需登录，执行请求会实际操作当前配置的数据库。
+各接口文档展示成功响应，通用错误响应格式见 `ApiErrorSchema`。Swagger 默认开启，无需登录，执行请求会实际操作当前配置的数据库。
 手动调试统一使用 Swagger，不再维护 `.http` 文件；自动化验证仍使用集成测试。
 
 用户响应包含 `id`、`username`、`email`、`age`、`createdAt` 和 `updatedAt`。邮箱和年龄无值时返回 `null`。更新用户时刷新 `updatedAt`，保留 `createdAt`。两个时间均以带偏移的 ISO 8601 字符串返回。
