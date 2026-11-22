@@ -24,7 +24,7 @@ declare namespace API {
   type UserRequest = {
     /** 用户名，唯一 */
     username: string;
-    /** 邮箱，空白值清空邮箱 */
+    /** 邮箱，传 null 或省略表示无邮箱 */
     email?: string;
     /** 年龄 */
     age?: number;

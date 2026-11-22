@@ -86,13 +86,14 @@ class AppApplicationTests {
   void crudAndNulls() throws Exception {
     long id = create("{\"username\":\"alice\",\"email\":\"alice@example.com\",\"age\":20}");
     assertEquals(200, call("GET", "/" + id, null).statusCode());
-    long second = create("{\"username\":\"bob\",\"email\":\"  \"}");
+    long second = create("{\"username\":\"bob\",\"email\":null}");
     var list = mapper.readTree(call("GET", "", null).body());
     assertEquals(2, list.size());
     assertEquals(id, list.get(0).get("id").asLong());
     assertEquals(second, list.get(1).get("id").asLong());
+    assertTrue(list.get(1).path("email").isNull());
     var before = mapper.readTree(call("GET", "/" + id, null).body());
-    var updated = call("PUT", "/" + id, "{\"username\":\"alice2\"}");
+    var updated = call("PUT", "/" + id, "{\"username\":\"alice2\",\"email\":null}");
     assertEquals(200, updated.statusCode());
     var after = mapper.readTree(updated.body());
     assertEquals("alice2", after.get("username").asText());
@@ -137,6 +138,15 @@ class AppApplicationTests {
       assertEquals(400, call("POST", "", body).statusCode(), body);
     }
     long aliceId = create("{\"username\":\"alice\",\"email\":\"a@example.com\"}");
+    for (String email : new String[] {"", "  "}) {
+      String body = "{\"username\":\"other\",\"email\":\"" + email + "\"}";
+      var created = call("POST", "", body);
+      assertEquals(400, created.statusCode(), created.body());
+      assertEquals("邮箱格式不正确", mapper.readTree(created.body()).path("message").asText());
+      var updated = call("PUT", "/" + aliceId, body);
+      assertEquals(400, updated.statusCode(), updated.body());
+      assertEquals("邮箱格式不正确", mapper.readTree(updated.body()).path("message").asText());
+    }
     assertEquals(
         200,
         call("PUT", "/" + aliceId, "{\"username\":\"alice\",\"email\":\"a@example.com\"}")

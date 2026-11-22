@@ -28,31 +28,21 @@ public class UserService {
   }
 
   public UserResponse create(UserRequest request) {
-    ensureUsernameAvailable(request.username(), null);
+    if (repository.existsByUsername(request.username())) {
+      throw new ApiException("用户名已存在");
+    }
     return repository.saveAndFlush(new UserEntity(request)).toResponse();
   }
 
   @Transactional
   public UserResponse update(long id, UserRequest request) {
     var user = repository.findById(id).orElseThrow(this::notFound);
-    ensureUsernameAvailable(request.username(), id);
+    if (repository.existsByUsernameAndIdNot(request.username(), id)) {
+      throw new ApiException("用户名已存在");
+    }
     user.updateDetails(request);
     repository.flush();
     return user.toResponse();
-  }
-
-  private void ensureUsernameAvailable(String username, Long currentUserId) {
-    boolean duplicate =
-        repository.exists(
-            (root, builder) -> {
-              var match = builder.equal(root.get("username"), username);
-              return currentUserId == null
-                  ? match
-                  : builder.and(match, builder.notEqual(root.get("id"), currentUserId));
-            });
-    if (duplicate) {
-      throw new ApiException("用户名已存在");
-    }
   }
 
   @Transactional

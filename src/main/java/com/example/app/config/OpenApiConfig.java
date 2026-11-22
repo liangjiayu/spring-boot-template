@@ -16,7 +16,7 @@ public class OpenApiConfig {
     ModelConverters.getInstance().read(ApiErrorResponse.class).forEach(components::addSchemas);
 
     var info =
-        new Info().title("spring-boot-template").version("v1").description("基于 Spring Boot 的项目模板。");
+        new Info().title("spring-boot-template").version("v1").description("基于 Spring Boot 的项目模板");
     return new OpenAPI().info(info).components(components);
   }
 }
