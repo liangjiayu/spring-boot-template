@@ -117,7 +117,7 @@ class AppApplicationTests {
     var missingError = mapper.readTree(missing.body());
     assertEquals(400, missingError.path("status").asInt());
     assertEquals("用户不存在", missingError.path("message").asText());
-    assertFalse(missingError.has("fieldErrors"));
+    assertEquals(2, missingError.size());
     assertEquals(400, call("PUT", "/" + id, "{\"username\":\"gone\"}").statusCode());
     assertEquals(400, call("DELETE", "/" + id, null).statusCode());
   }
@@ -152,8 +152,13 @@ class AppApplicationTests {
     assertEquals("a@example.com", mapper.readTree(sharedEmail.body()).path("email").asText());
     assertEquals(400, call("GET", "/invalid", null).statusCode());
     var error = mapper.readTree(call("POST", "", "{}").body());
-    assertTrue(error.path("fieldErrors").path("username").isTextual());
-    assertFalse(error.has("path"));
+    assertEquals(400, error.path("status").asInt());
+    assertEquals("用户名不能为空", error.path("message").asText());
+    assertEquals(2, error.size());
+    var multipleErrors = call("POST", "", "{\"email\":\"invalid\"}");
+    assertEquals(400, multipleErrors.statusCode());
+    var message = mapper.readTree(multipleErrors.body()).path("message").asText();
+    assertTrue(message.equals("用户名不能为空") || message.equals("邮箱格式不正确"), message);
   }
 
   void assertDuplicate(HttpResponse<String> response) throws Exception {
@@ -227,8 +232,7 @@ class AppApplicationTests {
     var errorProperties = spec.at("/components/schemas/ApiErrorSchema/properties");
     assertTrue(errorProperties.has("status"));
     assertTrue(errorProperties.has("message"));
-    assertTrue(errorProperties.has("fieldErrors"));
-    assertFalse(errorProperties.has("path"));
+    assertEquals(2, errorProperties.size());
     assertEquals(
         "boolean",
         paths.at("/~1api~1users~1{id}/delete/responses/200/content/*~1*/schema/type").asText());

@@ -4,8 +4,6 @@ declare namespace API {
     status: number;
     /** 错误说明 */
     message: string;
-    /** 字段校验错误，其他错误不包含此字段 */
-    fieldErrors?: Record<string, any>;
   };
 
   type deleteUsingDELETEParams = {
