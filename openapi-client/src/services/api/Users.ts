@@ -3,7 +3,7 @@
 import request from "umi-request";
 
 /** 查询用户列表 按 ID 升序返回 GET /api/users */
-export async function list(options?: { [key: string]: any }) {
+export async function getUserList(options?: { [key: string]: any }) {
   return request<API.UserResponse[]>("/api/users", {
     method: "GET",
     ...(options || {}),
@@ -11,7 +11,7 @@ export async function list(options?: { [key: string]: any }) {
 }
 
 /** 新增用户 POST /api/users */
-export async function create(
+export async function createUser(
   body: API.UserRequest,
   options?: { [key: string]: any }
 ) {
@@ -26,9 +26,9 @@ export async function create(
 }
 
 /** 查询用户详情 GET /api/users/${param0} */
-export async function get(
+export async function getUser(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getParams,
+  params: API.getUserParams,
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;
@@ -40,9 +40,9 @@ export async function get(
 }
 
 /** 修改用户 省略邮箱或年龄，或将其设为 null，会清空对应字段 PUT /api/users/${param0} */
-export async function update(
+export async function updateUser(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.updateParams,
+  params: API.updateUserParams,
   body: API.UserRequest,
   options?: { [key: string]: any }
 ) {
@@ -59,9 +59,9 @@ export async function update(
 }
 
 /** 删除用户 DELETE /api/users/${param0} */
-export async function deleteUsingDELETE(
+export async function deleteUser(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.deleteUsingDELETEParams,
+  params: API.deleteUserParams,
   options?: { [key: string]: any }
 ) {
   const { id: param0, ...queryParams } = params;

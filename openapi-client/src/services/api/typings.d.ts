@@ -6,17 +6,17 @@ declare namespace API {
     message: string;
   };
 
-  type deleteUsingDELETEParams = {
+  type deleteUserParams = {
     /** 用户 ID */
     id: number;
   };
 
-  type getParams = {
+  type getUserParams = {
     /** 用户 ID */
     id: number;
   };
 
-  type updateParams = {
+  type updateUserParams = {
     /** 用户 ID */
     id: number;
   };

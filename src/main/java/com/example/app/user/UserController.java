@@ -19,25 +19,26 @@ public class UserController {
 
   @Operation(summary = "查询用户列表", description = "按 ID 升序返回")
   @GetMapping
-  public List<UserResponse> list() {
+  public List<UserResponse> getUserList() {
     return service.list();
   }
 
   @Operation(summary = "查询用户详情")
   @GetMapping("/{id}")
-  public UserResponse get(@Parameter(description = "用户 ID", example = "1") @PathVariable long id) {
+  public UserResponse getUser(
+      @Parameter(description = "用户 ID", example = "1") @PathVariable long id) {
     return service.get(id);
   }
 
   @Operation(summary = "新增用户")
   @PostMapping
-  public UserResponse create(@Valid @RequestBody UserRequest request) {
+  public UserResponse createUser(@Valid @RequestBody UserRequest request) {
     return service.create(request);
   }
 
   @Operation(summary = "修改用户", description = "省略邮箱或年龄，或将其设为 null，会清空对应字段")
   @PutMapping("/{id}")
-  public UserResponse update(
+  public UserResponse updateUser(
       @Parameter(description = "用户 ID", example = "1") @PathVariable long id,
       @Valid @RequestBody UserRequest request) {
     return service.update(id, request);
@@ -45,7 +46,8 @@ public class UserController {
 
   @Operation(summary = "删除用户")
   @DeleteMapping("/{id}")
-  public boolean delete(@Parameter(description = "用户 ID", example = "1") @PathVariable long id) {
+  public boolean deleteUser(
+      @Parameter(description = "用户 ID", example = "1") @PathVariable long id) {
     service.delete(id);
     return true;
   }
