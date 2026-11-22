@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "用户管理")
+@Tag(name = "Users")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
