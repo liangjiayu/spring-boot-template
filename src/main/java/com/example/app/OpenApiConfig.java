@@ -1,6 +1,6 @@
-package com.example.demo;
+package com.example.app;
 
-import com.example.demo.common.ApiErrorResponse;
+import com.example.app.common.ApiErrorResponse;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

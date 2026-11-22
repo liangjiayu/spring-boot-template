@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.app;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +15,7 @@ import org.testcontainers.postgresql.PostgreSQLContainer;
 import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class DemoApplicationTests {
+class AppApplicationTests {
   static PostgreSQLContainer container;
 
   @DynamicPropertySource

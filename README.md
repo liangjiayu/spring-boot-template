@@ -8,8 +8,8 @@ Java 21 + Spring Boot + Spring JDBC + PostgreSQL。
 完成功能修改后，再格式化本次涉及的 Java 文件，然后运行相关编译或测试：
 
 ```sh
-./mvnw spotless:apply '-DspotlessFiles=.*/src/main/java/com/example/demo/Example\.java'
-./mvnw spotless:check '-DspotlessFiles=.*/src/main/java/com/example/demo/Example\.java'
+./mvnw spotless:apply '-DspotlessFiles=.*/src/main/java/com/example/app/Example\.java'
+./mvnw spotless:check '-DspotlessFiles=.*/src/main/java/com/example/app/Example\.java'
 ```
 
 将示例路径替换为实际文件，多个文件正则用逗号分隔。参数是匹配绝对路径的 Java 正则，前面的 `.*/` 和文件名中的 `\.` 需保留。

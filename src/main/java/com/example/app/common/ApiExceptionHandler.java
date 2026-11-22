@@ -1,4 +1,4 @@
-package com.example.demo.common;
+package com.example.app.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;

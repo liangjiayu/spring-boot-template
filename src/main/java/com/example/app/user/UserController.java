@@ -1,4 +1,4 @@
-package com.example.demo.user;
+package com.example.app.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

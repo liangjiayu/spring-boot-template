@@ -1,6 +1,6 @@
-package com.example.demo.user;
+package com.example.app.user;
 
-import com.example.demo.common.ApiException;
+import com.example.app.common.ApiException;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.PredicateSpecification;
