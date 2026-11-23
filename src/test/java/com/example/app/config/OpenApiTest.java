@@ -1,0 +1,84 @@
+package com.example.app.config;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.example.app.support.HttpTestSupport;
+import java.util.HashSet;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+import tools.jackson.databind.JsonNode;
+
+class OpenApiTest extends HttpTestSupport {
+  @Test
+  void publishesTemplateInfoAndUserOperations() throws Exception {
+    var spec = apiDocs();
+    assertEquals("spring-boot-template", spec.at("/info/title").asString());
+    assertEquals("v1", spec.at("/info/version").asString());
+    assertEquals("基于 Spring Boot 的项目模板", spec.at("/info/description").asString());
+
+    var paths = spec.path("paths");
+    var collection = paths.path("/api/users");
+    assertSuccessResponses(collection.path("get"));
+    assertSuccessResponses(collection.path("post"));
+
+    var member = paths.path("/api/users/{id}");
+    assertSuccessResponses(member.path("get"));
+    assertSuccessResponses(member.path("put"));
+    assertSuccessResponses(member.path("delete"));
+    assertEquals(
+        "boolean", member.path("delete").at("/responses/200/content/*~1*/schema/type").asString());
+  }
+
+  @Test
+  void documentsUserFieldsAndSharedErrorResponse() throws Exception {
+    var schemas = apiDocs().at("/components/schemas");
+    var request = schemas.path("UserRequest");
+    assertEquals(Set.of("username"), requiredFields(request));
+    assertEquals(50, request.at("/properties/username/maxLength").asInt());
+    assertEquals(255, request.at("/properties/email/maxLength").asInt());
+    assertEquals(0, request.at("/properties/age/minimum").asInt(-1));
+
+    var response = schemas.path("UserResponse");
+    assertEquals(Set.of("id", "username", "createdAt", "updatedAt"), requiredFields(response));
+    assertEquals("string", response.at("/properties/email/type").asString());
+    assertEquals("date-time", response.at("/properties/createdAt/format").asString());
+    assertEquals("date-time", response.at("/properties/updatedAt/format").asString());
+
+    var error = schemas.path("ApiErrorSchema");
+    assertEquals(Set.of("status", "message"), requiredFields(error));
+    assertEquals("integer", error.at("/properties/status/type").asString());
+    assertEquals("string", error.at("/properties/message/type").asString());
+    assertEquals(2, error.path("properties").size());
+  }
+
+  @Test
+  void servesSwaggerUiAndItsResources() throws Exception {
+    var redirect = request("GET", "/swagger-ui.html", null);
+    assertTrue(redirect.statusCode() == 301 || redirect.statusCode() == 302);
+    assertTrue(
+        redirect.headers().firstValue("Location").orElseThrow().contains("/swagger-ui/index.html"));
+
+    var page = request("GET", "/swagger-ui/index.html", null);
+    assertEquals(200, page.statusCode());
+    assertTrue(page.body().contains("swagger-ui-bundle.js"));
+    assertEquals(200, request("GET", "/swagger-ui/swagger-ui-bundle.js", null).statusCode());
+    assertEquals(200, request("GET", "/swagger-ui/swagger-ui.css", null).statusCode());
+    assertEquals(200, request("GET", "/v3/api-docs/swagger-config", null).statusCode());
+  }
+
+  private JsonNode apiDocs() throws Exception {
+    return expectJson(200, request("GET", "/v3/api-docs", null));
+  }
+
+  private static void assertSuccessResponses(JsonNode operation) {
+    var responses = operation.path("responses");
+    assertTrue(responses.has("200"));
+    assertEquals(1, responses.size());
+  }
+
+  private static Set<String> requiredFields(JsonNode schema) {
+    Set<String> fields = new HashSet<>();
+    schema.path("required").forEach(field -> fields.add(field.asString()));
+    return fields;
+  }
+}

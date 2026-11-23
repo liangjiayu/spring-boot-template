@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: spring-boot-template
+  datasource:
+    url: "${DB_URL:jdbc:postgresql://localhost:5432/spring_boot_template}"
+    username: "${DB_USERNAME:postgres}"
+    password: "${DB_PASSWORD:}"
+  sql:
+    init:
+      mode: never
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+springdoc:
+  paths-to-match: /api/**
+  override-with-generic-response: false
+  remove-broken-reference-definitions: false
