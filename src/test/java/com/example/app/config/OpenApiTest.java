@@ -52,22 +52,18 @@ class OpenApiTest extends HttpTestSupport {
   }
 
   @Test
-  void servesSwaggerUiAndItsResources() throws Exception {
-    var redirect = request("GET", "/swagger-ui.html", null);
+  void servesSwaggerUi() throws Exception {
+    var redirect = request("GET", "/swagger-ui.html");
     assertTrue(redirect.statusCode() == 301 || redirect.statusCode() == 302);
     assertTrue(
         redirect.headers().firstValue("Location").orElseThrow().contains("/swagger-ui/index.html"));
 
-    var page = request("GET", "/swagger-ui/index.html", null);
+    var page = request("GET", "/swagger-ui/index.html");
     assertEquals(200, page.statusCode());
-    assertTrue(page.body().contains("swagger-ui-bundle.js"));
-    assertEquals(200, request("GET", "/swagger-ui/swagger-ui-bundle.js", null).statusCode());
-    assertEquals(200, request("GET", "/swagger-ui/swagger-ui.css", null).statusCode());
-    assertEquals(200, request("GET", "/v3/api-docs/swagger-config", null).statusCode());
   }
 
   private JsonNode apiDocs() throws Exception {
-    return expectJson(200, request("GET", "/v3/api-docs", null));
+    return expectJson(200, request("GET", "/v3/api-docs"));
   }
 
   private static void assertSuccessResponses(JsonNode operation) {

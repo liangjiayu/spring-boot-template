@@ -21,16 +21,19 @@ public abstract class HttpTestSupport {
   @LocalServerPort private int port;
   @Autowired private ObjectMapper mapper;
 
+  protected HttpResponse<String> request(String method, String path) throws Exception {
+    return request(method, path, null);
+  }
+
   protected HttpResponse<String> request(String method, String path, String body) throws Exception {
     var request = HttpRequest.newBuilder(URI.create("http://localhost:" + port + path));
-    if (body != null) {
-      request.header("Content-Type", "application/json");
+    if (body == null) {
+      request.method(method, HttpRequest.BodyPublishers.noBody());
+    } else {
+      request
+          .header("Content-Type", "application/json")
+          .method(method, HttpRequest.BodyPublishers.ofString(body));
     }
-    request.method(
-        method,
-        body == null
-            ? HttpRequest.BodyPublishers.noBody()
-            : HttpRequest.BodyPublishers.ofString(body));
     return CLIENT.send(request.build(), HttpResponse.BodyHandlers.ofString());
   }
 
