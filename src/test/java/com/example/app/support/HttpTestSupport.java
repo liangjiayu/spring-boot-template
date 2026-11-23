@@ -9,37 +9,17 @@ import java.net.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.postgresql.PostgreSQLContainer;
+import org.springframework.test.context.ActiveProfiles;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public abstract class HttpTestSupport {
   private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
   @LocalServerPort private int port;
   @Autowired private ObjectMapper mapper;
-
-  @DynamicPropertySource
-  static void database(DynamicPropertyRegistry properties) {
-    String url = System.getenv("TEST_DB_URL");
-    if (url == null) {
-      var container = new PostgreSQLContainer("postgres:17-alpine");
-      container.start();
-      properties.add("spring.datasource.url", container::getJdbcUrl);
-      properties.add("spring.datasource.username", container::getUsername);
-      properties.add("spring.datasource.password", container::getPassword);
-    } else {
-      properties.add("spring.datasource.url", () -> url);
-      properties.add(
-          "spring.datasource.username",
-          () -> System.getenv().getOrDefault("TEST_DB_USERNAME", "postgres"));
-      properties.add(
-          "spring.datasource.password", () -> System.getenv().getOrDefault("TEST_DB_PASSWORD", ""));
-    }
-  }
 
   protected HttpResponse<String> request(String method, String path, String body) throws Exception {
     var request = HttpRequest.newBuilder(URI.create("http://localhost:" + port + path));

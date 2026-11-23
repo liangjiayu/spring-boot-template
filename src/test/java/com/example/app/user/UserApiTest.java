@@ -31,8 +31,9 @@ class UserApiTest extends HttpTestSupport {
   void resetUserTable() {
     String database = jdbc.queryForObject("SELECT current_database()", String.class);
     assertTrue(
-        "test".equals(database) || (database != null && database.startsWith("demo_crud_test")),
-        "Only disposable databases named test or demo_crud_test* are permitted");
+        "test".equals(database)
+            || (database != null && database.startsWith("spring_boot_template_test")),
+        "Only disposable databases named test or spring_boot_template_test* are permitted");
     jdbc.execute("DROP TABLE IF EXISTS public.test_user");
     new ResourceDatabasePopulator(new FileSystemResource("db/test_user.sql"))
         .execute(Objects.requireNonNull(jdbc.getDataSource()));

@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: "${TEST_DB_URL:jdbc:postgresql://127.0.0.1:5432/spring_boot_template_test}"
+    username: "${TEST_DB_USERNAME:postgres}"
+    password: "${TEST_DB_PASSWORD:}"
