@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import tools.jackson.databind.JsonNode;
 
 class OpenApiTest extends HttpTestSupport {
+  /**
+   * 验证 OpenAPI 发布模板元信息和五项用户操作，各操作只声明 200 响应，且删除操作返回布尔值。
+   */
   @Test
   void publishesTemplateInfoAndUserOperations() throws Exception {
     var spec = apiDocs();
@@ -29,6 +32,9 @@ class OpenApiTest extends HttpTestSupport {
         "boolean", member.path("delete").at("/responses/200/content/*~1*/schema/type").asString());
   }
 
+  /**
+   * 验证 OpenAPI 模型准确声明用户请求的字段约束、用户响应的必填项和时间格式，以及通用错误响应结构。
+   */
   @Test
   void documentsUserFieldsAndSharedErrorResponse() throws Exception {
     var schemas = apiDocs().at("/components/schemas");
